@@ -2,7 +2,11 @@ package org.beanone.xlogger.mock;
 
 import org.beanone.xlogger.LoggerSpec;
 
-public class MockClass {
+public class MockClass implements MockInterface {
+	@Override
+	public void interfaceMethod() {
+	}
+
 	public void methodException() {
 		throw new IllegalArgumentException();
 	}
@@ -19,6 +23,7 @@ public class MockClass {
 	public Object methodWithArgWithoutAnotation(MockArg arg) {
 		methodWithAnotation();
 		methodWithoutAnotation();
+		interfaceMethod();
 		return new MockResult();
 	}
 

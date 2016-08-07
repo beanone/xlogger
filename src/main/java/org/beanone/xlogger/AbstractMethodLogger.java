@@ -33,48 +33,58 @@ public abstract class AbstractMethodLogger {
 			final MethodSignature signature = (MethodSignature) pjp
 			        .getSignature();
 			method = signature.getMethod();
-			if (method.getDeclaringClass().isInterface()) {
-				method = pjp.getTarget().getClass().getDeclaredMethod(
-				        signature.getName(), method.getParameterTypes());
-			}
 		}
 		return method;
 	}
 
+	private void logWrongUseOfAspect(final Signature signature) {
+		// This should never happen since the Aspect should only be applied
+		// to a method. However, if the user mistakenly applies this aspect
+		// to something other than a method, we ignore it but log a warning
+		// message.
+		LOGGER.warn(
+		        "MethodLogger error, apsect applicable to method long, but it was {}",
+		        signature);
+	}
+
+	/**
+	 * Fetches the {@link Logger} of the invoker.
+	 *
+	 * @param invoker
+	 *            the method invoker object.
+	 * @return a Logger instance. The subclasses can override this as needed.
+	 */
 	protected Logger getLogger(final Object invoker) {
 		return LoggerFactory.getLogger(invoker.getClass());
 	}
 
 	protected Object handle(ProceedingJoinPoint pjp) throws Throwable {
 		final Object invoker = pjp.getThis();
-		final Logger logger = getLogger(invoker);
 		final Method method = getMethod(pjp);
 		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
-		final ArgumentSpecRegistry registry = ArgumentSpecRegistry
-		        .current(spec.partition());
 		final Signature signature = pjp.getStaticPart().getSignature();
 
+		final LoggingContext context = new LoggingContext()
+		        .logger(getLogger(invoker))
+		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;
-			final String[] params = ms.getParameterNames();
 			final Object[] args = pjp.getArgs();
-			final LoggerLevel level = spec.level();
-			LoggerSupport.doLog("Enter", method.getName(), level, logger,
-			        registry, null, params, args);
+			context.methodName(method.getName()).handler(spec.level())
+			        .names(ms.getParameterNames()).args(args);
+			LoggerSupport.doLog(context.tag("Enter"));
 			final Object returns = pjp.proceed(args);
 			if (returns == null) {
-				LoggerSupport.doLog("Exit", method.getName(), level, logger,
-				        registry, null, new String[0], new Object[0]);
+				LoggerSupport.doLog(context.tag("Exit").names(new String[0])
+				        .args(new Object[0]));
 			} else {
-				LoggerSupport.doLog("Exit", method.getName(), level, logger,
-				        registry, null, new String[] { "result" },
-				        new Object[] { returns });
+				LoggerSupport.doLog(
+				        context.tag("Exit").names(new String[] { "result" })
+				                .args(new Object[] { returns }));
 			}
 			return returns;
 		} else {
-			LOGGER.warn(
-			        "MethodLogger error, method signature expected, but it was {}",
-			        signature);
+			logWrongUseOfAspect(signature);
 		}
 
 		// not a method invocation and thus OK to return null
@@ -83,20 +93,23 @@ public abstract class AbstractMethodLogger {
 
 	protected void handleThrow(JoinPoint pjp, Throwable t) throws Throwable {
 		final Object invoker = pjp.getThis();
-		final Logger logger = getLogger(invoker);
 		final Method method = getMethod(pjp);
 		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
-		final ArgumentSpecRegistry registry = ArgumentSpecRegistry
-		        .current(spec.partition());
 		final Signature signature = pjp.getStaticPart().getSignature();
 
+		final LoggingContext context = new LoggingContext()
+		        .logger(getLogger(invoker))
+		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;
-			final String[] params = ms.getParameterNames();
-			final Object[] args = pjp.getArgs();
-			final LoggerLevel level = spec.exceptionLevel();
-			LoggerSupport.doLog("Enter", method.getName(), level, logger,
-			        registry, t, params, args);
+			final ExceptionSpec[] levels = spec.exceptionLevel();
+			LoggerSupport
+			        .doLog(context.tag("Exception").methodName(method.getName())
+			                .handler(LoggerSupport.getExceptionLevel(levels, t))
+			                .exception(t).names(ms.getParameterNames())
+			                .args(pjp.getArgs()));
+		} else {
+			logWrongUseOfAspect(signature);
 		}
 	}
 }

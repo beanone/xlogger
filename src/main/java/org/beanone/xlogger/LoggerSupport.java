@@ -3,8 +3,6 @@ package org.beanone.xlogger;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-
 /**
  * Utilities that supports logging.
  *
@@ -12,6 +10,7 @@ import org.slf4j.Logger;
  *
  */
 public class LoggerSupport {
+	public static ExceptionSpec[] EXCEPTION_SPEC = new ExceptionSpec[0];
 	public static LoggerSpec DEFAULT_LOGGER_SPEC = new LoggerSpec() {
 
 		@Override
@@ -20,8 +19,8 @@ public class LoggerSupport {
 		}
 
 		@Override
-		public LoggerLevel exceptionLevel() {
-			return LoggerLevel.ERROR;
+		public ExceptionSpec[] exceptionLevel() {
+			return EXCEPTION_SPEC;
 		}
 
 		@Override
@@ -39,16 +38,35 @@ public class LoggerSupport {
 		// private for utility
 	}
 
-	public static void doLog(final String tag, final String methodName,
-	        final LoggingHandler handler, final Logger logger,
-	        final ArgumentSpecRegistry registry, final Throwable t,
-	        final String[] names, final Object[] args) {
-		handler.handle(logger, () -> {
+	/**
+	 * Performs logging on behalf of the passed in logger.
+	 *
+	 * @param tag
+	 *            a String that tags the logging.
+	 * @param methodName
+	 *            the name of the method logged.
+	 * @param handler
+	 *            the {@link LoggingHandler} to handle the logging.
+	 * @param logger
+	 *            the Logger that actually does the logging.
+	 * @param registry
+	 *            the registry that registers the {@link ArgumentSpec}s.
+	 * @param t
+	 *            the Exception to use in the logging.
+	 * @param names
+	 *            the names of the method arguments.
+	 * @param args
+	 *            the arguments.
+	 */
+	public static void doLog(LoggingContext context) {
+		context.getHandler().handle(context.getLogger(), () -> {
 			final StringBuilder builder = new StringBuilder();
+			final String[] names = context.getNames();
+			final Object[] args = context.getArgs();
 			for (int i = 0; i < names.length; i++) {
 				builder.append(names[i]);
 				if (args[i] != null) {
-					final ArgumentSpec<?> spec = registry
+					final ArgumentSpec<?> spec = context.getRegistry()
 		                    .getSpec(args[i].getClass());
 					builder.append('=').append(spec.asString(args[i]));
 				}
@@ -57,10 +75,23 @@ public class LoggerSupport {
 			if (builder.length() > 0) {
 				builder.delete(builder.length() - 2, builder.length());
 			}
-			builder.insert(0, '(').insert(0, methodName).insert(0, ' ')
-		            .insert(0, tag).append(')');
+			builder.insert(0, '(').insert(0, context.getMethodName())
+		            .insert(0, ' ').insert(0, context.getTag()).append(')');
 			return builder.toString();
-		}, t);
+		}, context.getException());
+	}
+
+	public static LoggerLevel getExceptionLevel(ExceptionSpec[] specs,
+	        Throwable t) {
+		if (t == null) {
+			return LoggerLevel.ERROR;
+		}
+		for (final ExceptionSpec spec : specs) {
+			if (t.getClass().equals(spec.exception())) {
+				return spec.level();
+			}
+		}
+		return LoggerLevel.ERROR;
 	}
 
 	/**

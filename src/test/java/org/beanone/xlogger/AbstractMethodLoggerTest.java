@@ -21,7 +21,7 @@ public class AbstractMethodLoggerTest {
 		        .forClass(String.class);
 		final ArgumentCaptor<Throwable> captor2 = ArgumentCaptor
 		        .forClass(Throwable.class);
-		Mockito.verify(MockMethodLogger.MOCK_LOGGER, Mockito.atLeast(8))
+		Mockito.verify(MockMethodLogger.MOCK_LOGGER, Mockito.atLeast(10))
 		        .trace(captor1.capture(), captor2.capture());
 	}
 
