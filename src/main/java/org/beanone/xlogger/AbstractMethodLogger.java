@@ -23,8 +23,8 @@ public abstract class AbstractMethodLogger {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(AbstractMethodLogger.class);
 
-	@Pointcut("!execution(* org.beanone.xlogger.*.*(..))")
-	public void notFramework() {
+	@Pointcut("execution(* org.beanone.xlogger.*.*(..))")
+	public void inFramework() {
 	}
 
 	private Method getMethod(JoinPoint pjp) throws NoSuchMethodException {
@@ -55,6 +55,7 @@ public abstract class AbstractMethodLogger {
 	 * @return a Logger instance. The subclasses can override this as needed.
 	 */
 	protected Logger getLogger(final Object invoker) {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return LoggerFactory.getLogger(invoker.getClass());
 	}
 

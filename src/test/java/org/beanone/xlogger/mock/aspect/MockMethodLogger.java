@@ -17,23 +17,23 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	        .getLogger(MockMethodLogger.class);
 	public static Logger MOCK_LOGGER = Mockito.spy(LOGGER);
 
-	@Around("xloggerMock() && notAspect() && notFramework() && notTrivial()")
+	@Around("xloggerMock() && !inAspect() && !inFramework() && !trivial()")
 	public Object acound(ProceedingJoinPoint point) throws Throwable {
 		return handle(point);
 	}
 
-	@Pointcut("!cflow(call(* org.beanone.xlogger.mock.aspect.*.*(..)))")
-	public void notAspect() {
+	@Pointcut("cflow(call(* org.beanone.xlogger.mock.aspect.*.*(..)))")
+	public void inAspect() {
 	}
 
-	@Pointcut("!execution(* *..*.get*(..)) && !execution(* *..*.set*(..)) && !execution(* *..*.is*(..)) && !execution(* *..*.add*(..))")
-	public void notTrivial() {
-
-	}
-
-	@AfterThrowing(pointcut = "xloggerMock() && notAspect() && notFramework() && notTrivial()", throwing = "t")
+	@AfterThrowing(pointcut = "xloggerMock() && !inAspect() && !inFramework() && !trivial()", throwing = "t")
 	public void throwing(JoinPoint point, Throwable t) throws Throwable {
 		handleThrow(point, t);
+	}
+
+	@Pointcut("execution(* *..*.get*(..)) || execution(* *..*.set*(..)) || execution(* *..*.is*(..)) || execution(* *..*.add*(..))")
+	public void trivial() {
+
 	}
 
 	@Pointcut("execution(* org.beanone.xlogger.mock.*.*(..))")
@@ -42,6 +42,7 @@ public class MockMethodLogger extends AbstractMethodLogger {
 
 	@Override
 	protected Logger getLogger(Object invoker) {
+		super.getLogger(invoker);
 		Mockito.when(MOCK_LOGGER.isTraceEnabled()).thenReturn(true);
 		return MOCK_LOGGER;
 	}
