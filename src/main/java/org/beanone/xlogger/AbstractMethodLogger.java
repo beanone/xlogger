@@ -94,7 +94,7 @@ public abstract class AbstractMethodLogger {
 			final MethodSignature ms = (MethodSignature) signature;
 			final String[] params = ms.getParameterNames();
 			final Object[] args = pjp.getArgs();
-			final LoggerLevel level = spec.level();
+			final LoggerLevel level = spec.exceptionLevel();
 			LoggerSupport.doLog("Enter", method.getName(), level, logger,
 			        registry, t, params, args);
 		}
