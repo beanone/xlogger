@@ -27,7 +27,7 @@ public abstract class AbstractMethodLogger {
 	public void inFramework() {
 	}
 
-	private Method getMethod(JoinPoint pjp) throws NoSuchMethodException {
+	private Method getMethod(JoinPoint pjp) {
 		Method method = null;
 		if (pjp.getSignature() instanceof MethodSignature) {
 			final MethodSignature signature = (MethodSignature) pjp
@@ -58,6 +58,18 @@ public abstract class AbstractMethodLogger {
 		return LoggerFactory.getLogger(invoker.getClass());
 	}
 
+	/**
+	 * Handles invocation of the advised method.
+	 *
+	 * @param pjp
+	 *            the pointcut.
+	 * @param defaultLevel
+	 *            the default {@link LoggerLevel} if no mapping is defined for
+	 *            the type of exception.
+	 * @return the return of the method invoked.
+	 * @throws Throwable
+	 *             and exception thrown from invoking the method advised.
+	 */
 	protected Object handle(ProceedingJoinPoint pjp, LoggerLevel defaultLevel)
 	        throws Throwable {
 		final Object invoker = pjp.getThis();
@@ -94,8 +106,22 @@ public abstract class AbstractMethodLogger {
 		return null;
 	}
 
+	/**
+	 * Handles exception thrown from the advised method.
+	 *
+	 * @param pjp
+	 *            the pointcut.
+	 * @param t
+	 *            the Exception thrown.
+	 * @param defaultSpecs
+	 *            the default {@link ExceptionSpec}s that defines the
+	 *            {@link LoggerLevel} mapping for the exceptions.
+	 * @param defaultLevel
+	 *            the default {@link LoggerLevel} if no mapping is defined for
+	 *            the type of exception.
+	 */
 	protected void handleThrow(JoinPoint pjp, Throwable t,
-	        LoggerLevel defaultLevel) throws Throwable {
+	        ExceptionSpec[] defaultSpecs, LoggerLevel defaultLevel) {
 		final Object invoker = pjp.getThis();
 		final Method method = getMethod(pjp);
 		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
@@ -106,10 +132,14 @@ public abstract class AbstractMethodLogger {
 		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;
-			final ExceptionSpec[] levels = spec.exceptionLevel();
+			ExceptionSpec[] exceptionSpecs = spec.exceptionLevel();
+			exceptionSpecs = (exceptionSpecs == null
+			        || exceptionSpecs.length == 0 && defaultSpecs != null)
+			                ? defaultSpecs : exceptionSpecs;
 			LoggerSupport
 			        .doLog(context.tag("Exception").methodName(method.getName())
-			                .handler(LoggerSupport.getExceptionLevel(levels, t, defaultLevel))
+			                .handler(LoggerSupport.getExceptionLevel(
+			                        exceptionSpecs, t, defaultLevel))
 			                .exception(t).names(ms.getParameterNames())
 			                .args(pjp.getArgs()));
 		} else {
