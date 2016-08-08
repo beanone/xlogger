@@ -73,8 +73,8 @@ public abstract class AbstractMethodLogger {
 	 *            the method invoker object.
 	 * @return a Logger instance. The subclasses can override this as needed.
 	 */
-	protected Logger getLogger(final Object invoker) {
-		return LoggerFactory.getLogger(invoker.getClass());
+	protected Logger getLogger(final Class<?> clazz) {
+		return LoggerFactory.getLogger(clazz);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public abstract class AbstractMethodLogger {
 		final Signature signature = pjp.getStaticPart().getSignature();
 
 		final LoggingContext context = new LoggingContext()
-		        .logger(getLogger(pjp.getTarget()))
+		        .logger(getLogger(signature.getDeclaringType()))
 		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;
@@ -145,7 +145,7 @@ public abstract class AbstractMethodLogger {
 		final Signature signature = pjp.getStaticPart().getSignature();
 
 		final LoggingContext context = new LoggingContext()
-		        .logger(getLogger(pjp.getTarget()))
+		        .logger(getLogger(signature.getDeclaringType()))
 		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;
