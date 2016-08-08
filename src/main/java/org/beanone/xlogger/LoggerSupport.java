@@ -10,7 +10,13 @@ import java.lang.reflect.Method;
  *
  */
 public class LoggerSupport {
+	/**
+	 * The system default exception log level mapping.
+	 */
 	public static ExceptionSpec[] EXCEPTION_SPEC = new ExceptionSpec[0];
+	/**
+	 * The system default LoggerSpec.
+	 */
 	public static LoggerSpec DEFAULT_LOGGER_SPEC = new LoggerSpec() {
 
 		@Override
@@ -41,22 +47,9 @@ public class LoggerSupport {
 	/**
 	 * Performs logging on behalf of the passed in logger.
 	 *
-	 * @param tag
-	 *            a String that tags the logging.
-	 * @param methodName
-	 *            the name of the method logged.
-	 * @param handler
-	 *            the {@link LoggingHandler} to handle the logging.
-	 * @param logger
-	 *            the Logger that actually does the logging.
-	 * @param registry
-	 *            the registry that registers the {@link ArgumentSpec}s.
-	 * @param t
-	 *            the Exception to use in the logging.
-	 * @param names
-	 *            the names of the method arguments.
-	 * @param args
-	 *            the arguments.
+	 * @param context
+	 *            the logging context that all data needed to render a logging
+	 *            message. Never null.
 	 */
 	public static void doLog(LoggingContext context) {
 		context.getHandler().handle(context.getLogger(), () -> {
@@ -81,6 +74,19 @@ public class LoggerSupport {
 		}, context.getException());
 	}
 
+	/**
+	 * Fetches the logging level for a given type of exception.
+	 *
+	 * @param specs
+	 *            the {@link ExceptionSpec}s that contains the exception to log
+	 *            level mapping. Never null.
+	 * @param t
+	 *            the Exception whose log level is resolved. May be null.
+	 * @param defaultLevel
+	 *            the default log level if a mapping for the passed in exception
+	 *            type is not found.
+	 * @return a log level. Never null.
+	 */
 	public static LoggerLevel getExceptionLevel(ExceptionSpec[] specs,
 	        Throwable t, LoggerLevel defaultLevel) {
 		if (t == null) {
@@ -98,7 +104,7 @@ public class LoggerSupport {
 	 * Retrieves the {@link LoggerSpec} for the passed in method.
 	 *
 	 * @param method
-	 *            the method whose {@link LoggerSpec} to be fetched.
+	 *            the method whose {@link LoggerSpec} to be fetched. Never null.
 	 * @return a {@link LoggerSpec}. Never null.
 	 */
 	public static LoggerSpec getLoggerSpec(Method method) {

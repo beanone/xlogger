@@ -69,6 +69,8 @@ public class ArgumentSpecRegistry {
 	 *
 	 * @param clazz
 	 *            the class type for the {@link ArgumentSpec} to be retrieved.
+	 * @param <T>
+	 *            the class type retrieved {@link ArgumentSpec} is for.
 	 * @return a matching {@link ArgumentSpec}.
 	 */
 	@SuppressWarnings("unchecked")
@@ -83,6 +85,8 @@ public class ArgumentSpecRegistry {
 	 *            the class type the passed in {@link ArgumentSpec} is for.
 	 * @param spec
 	 *            the {@link ArgumentSpec} to register.
+	 * @param <T>
+	 *            the class type registering {@link ArgumentSpec} is for.
 	 * @return the spec passed in.
 	 */
 	public <T> ArgumentSpec<T> register(Class<T> clazz, ArgumentSpec<T> spec) {
