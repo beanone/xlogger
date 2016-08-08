@@ -91,13 +91,12 @@ public abstract class AbstractMethodLogger {
 	 */
 	protected Object handle(ProceedingJoinPoint pjp, LoggerLevel defaultLevel)
 	        throws Throwable {
-		final Object invoker = pjp.getThis();
 		final Method method = getMethod(pjp);
 		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
 		final Signature signature = pjp.getStaticPart().getSignature();
 
 		final LoggingContext context = new LoggingContext()
-		        .logger(getLogger(invoker))
+		        .logger(getLogger(pjp.getTarget()))
 		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;
@@ -141,13 +140,12 @@ public abstract class AbstractMethodLogger {
 	 */
 	protected void handleThrows(JoinPoint pjp, Throwable t,
 	        ExceptionSpec[] defaultSpecs, LoggerLevel defaultLevel) {
-		final Object invoker = pjp.getThis();
 		final Method method = getMethod(pjp);
 		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
 		final Signature signature = pjp.getStaticPart().getSignature();
 
 		final LoggingContext context = new LoggingContext()
-		        .logger(getLogger(invoker))
+		        .logger(getLogger(pjp.getTarget()))
 		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;

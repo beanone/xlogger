@@ -89,8 +89,8 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	 * method is invoked.
 	 */
 	@Override
-	protected Logger getLogger(Object invoker) {
-		super.getLogger(invoker);
+	protected Logger getLogger(Object target) {
+		super.getLogger(target).trace("Test");
 		Mockito.when(MOCK_LOGGER.isTraceEnabled()).thenReturn(true);
 		return MOCK_LOGGER;
 	}
