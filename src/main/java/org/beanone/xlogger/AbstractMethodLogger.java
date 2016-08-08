@@ -12,8 +12,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract based implementation of a method logging aspect. To use this, extend
- * it and define your joint point and call the handle method.
+ * Abstract base implementation of a method logging aspect. To use this, extend
+ * it and define your advice(s) and call the handle() or handleThrows() methods
+ * as needed. The logging messages contain all method arguments rendered using
+ * their toString() methods by default. To change that behavior, one needs to
+ * register {@link ArgumentSpec} for the corresponding class type with an
+ * {@link ArgumentSpecRegistry}. More than one {@link ArgumentSpec}s of a single
+ * class type can be registered, each with a different
+ * {@link ArgumentSpecRegistry} partition.
+ *
+ * Log levels defaulting can be defined by binding to the logging advice(s) in
+ * your concrete logging aspect (subclass of this class). Method level
+ * customizations can be defined by annotating the method with a
+ * {@link LoggerSpec}. In both the defaulting and method level customization,
+ * you can define the log levels for the method logging and exceptions.
+ * Exception logging level is defined using the {@link ExceptionSpec} annotation
+ * embedded inside the {@link LoggerSpec} or directly passing programmatically
+ * constructed instances of {@link ExceptionSpec} during default log level
+ * binding (to the advice(s)).
+ *
+ * Reference implementation is done in the Unit tests. Refer to that and read
+ * the javadoc in that will help one to get started quickly.
  *
  * @author Hongyan Li
  *
@@ -120,7 +139,7 @@ public abstract class AbstractMethodLogger {
 	 *            the default {@link LoggerLevel} if no mapping is defined for
 	 *            the type of exception.
 	 */
-	protected void handleThrow(JoinPoint pjp, Throwable t,
+	protected void handleThrows(JoinPoint pjp, Throwable t,
 	        ExceptionSpec[] defaultSpecs, LoggerLevel defaultLevel) {
 		final Object invoker = pjp.getThis();
 		final Method method = getMethod(pjp);

@@ -47,7 +47,7 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	 */
 	@AfterThrowing(pointcut = "xloggerMock() && !inAspect() && !inFramework() && !trivial()", throwing = "t")
 	public void logException(JoinPoint point, Throwable t) {
-		handleThrow(point, t, null, LoggerLevel.ERROR);
+		handleThrows(point, t, null, LoggerLevel.ERROR);
 	}
 
 	/**
