@@ -14,7 +14,4 @@ The handle() method logs two messages, one before the method invocation and incl
 
 An ArgumentSpecRegistry can register more than one way to render an argument type. To do that, simply register to a different registry partition.
 
-The default logging behavior can be customized by annotating the method with LoggerSpec annotation or through configuration. For usage of the annotation LoggerSpec, see the javadoc for the annotation. For usage of the configuration, see the below section.
-
-### Usage of configuration
-
+The default logging behavior can be customized by annotating the method with LoggerSpec annotation and combining the default LoggerLevel with different advice expressions in the aspect implementation. Refer to the MockMethodLogger as a reference implementation. 

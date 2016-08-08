@@ -18,18 +18,18 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	        .getLogger(MockMethodLogger.class);
 	public static Logger MOCK_LOGGER = Mockito.spy(LOGGER);
 
-	@Around("xloggerMock() && !inAspect() && !inFramework() && !trivial()")
-	public Object acound(ProceedingJoinPoint point) throws Throwable {
-		return handle(point, LoggerLevel.TRACE);
-	}
-
 	@Pointcut("cflow(call(* org.beanone.xlogger.mock.aspect.*.*(..)))")
 	public void inAspect() {
 	}
 
 	@AfterThrowing(pointcut = "xloggerMock() && !inAspect() && !inFramework() && !trivial()", throwing = "t")
-	public void throwing(JoinPoint point, Throwable t) throws Throwable {
+	public void logException(JoinPoint point, Throwable t) throws Throwable {
 		handleThrow(point, t, LoggerLevel.ERROR);
+	}
+
+	@Around("xloggerMock() && !inAspect() && !inFramework() && !trivial()")
+	public Object logInvocation(ProceedingJoinPoint point) throws Throwable {
+		return handle(point, LoggerLevel.TRACE);
 	}
 
 	@Pointcut("execution(* *..*.get*(..)) || execution(* *..*.set*(..)) || execution(* *..*.is*(..)) || execution(* *..*.add*(..))")
