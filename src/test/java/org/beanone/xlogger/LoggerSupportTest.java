@@ -59,21 +59,22 @@ public class LoggerSupportTest {
 
 	@Test
 	public void testGetExceptionLevelThrowableNull() {
-		Assert.assertSame(LoggerLevel.ERROR,
-		        LoggerSupport.getExceptionLevel(new ExceptionSpec[0], null));
+		Assert.assertSame(LoggerLevel.ERROR, LoggerSupport.getExceptionLevel(
+		        new ExceptionSpec[0], null, LoggerLevel.ERROR));
 	}
 
 	@Test
 	public void testGetExceptionLevelWithMatchedExceptionSpec() {
-		Assert.assertSame(LoggerLevel.WARN, LoggerSupport.getExceptionLevel(
-		        createExceptionLevels(), new IllegalArgumentException()));
+		Assert.assertSame(LoggerLevel.WARN,
+		        LoggerSupport.getExceptionLevel(createExceptionLevels(),
+		                new IllegalArgumentException(), LoggerLevel.ERROR));
 
 	}
 
 	@Test
 	public void testGetExceptionLevelWithUnmatchedExceptionSpec() {
-		Assert.assertSame(LoggerLevel.ERROR, LoggerSupport
-		        .getExceptionLevel(createExceptionLevels(), new Exception()));
+		Assert.assertSame(LoggerLevel.ERROR, LoggerSupport.getExceptionLevel(
+		        createExceptionLevels(), new Exception(), LoggerLevel.ERROR));
 
 	}
 

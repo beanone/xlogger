@@ -55,11 +55,11 @@ public abstract class AbstractMethodLogger {
 	 * @return a Logger instance. The subclasses can override this as needed.
 	 */
 	protected Logger getLogger(final Object invoker) {
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return LoggerFactory.getLogger(invoker.getClass());
 	}
 
-	protected Object handle(ProceedingJoinPoint pjp) throws Throwable {
+	protected Object handle(ProceedingJoinPoint pjp, LoggerLevel defaultLevel)
+	        throws Throwable {
 		final Object invoker = pjp.getThis();
 		final Method method = getMethod(pjp);
 		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
@@ -71,7 +71,9 @@ public abstract class AbstractMethodLogger {
 		if (signature instanceof MethodSignature) {
 			final MethodSignature ms = (MethodSignature) signature;
 			final Object[] args = pjp.getArgs();
-			context.methodName(method.getName()).handler(spec.level())
+			final LoggerLevel level = spec.level() == null ? defaultLevel
+			        : spec.level();
+			context.methodName(method.getName()).handler(level)
 			        .names(ms.getParameterNames()).args(args);
 			LoggerSupport.doLog(context.tag("Enter"));
 			final Object returns = pjp.proceed(args);
@@ -92,7 +94,8 @@ public abstract class AbstractMethodLogger {
 		return null;
 	}
 
-	protected void handleThrow(JoinPoint pjp, Throwable t) throws Throwable {
+	protected void handleThrow(JoinPoint pjp, Throwable t,
+	        LoggerLevel defaultLevel) throws Throwable {
 		final Object invoker = pjp.getThis();
 		final Method method = getMethod(pjp);
 		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
@@ -106,7 +109,7 @@ public abstract class AbstractMethodLogger {
 			final ExceptionSpec[] levels = spec.exceptionLevel();
 			LoggerSupport
 			        .doLog(context.tag("Exception").methodName(method.getName())
-			                .handler(LoggerSupport.getExceptionLevel(levels, t))
+			                .handler(LoggerSupport.getExceptionLevel(levels, t, defaultLevel))
 			                .exception(t).names(ms.getParameterNames())
 			                .args(pjp.getArgs()));
 		} else {

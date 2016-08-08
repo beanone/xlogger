@@ -25,7 +25,7 @@ public class LoggerSupport {
 
 		@Override
 		public LoggerLevel level() {
-			return LoggerLevel.TRACE;
+			return null;
 		}
 
 		@Override
@@ -82,16 +82,16 @@ public class LoggerSupport {
 	}
 
 	public static LoggerLevel getExceptionLevel(ExceptionSpec[] specs,
-	        Throwable t) {
+	        Throwable t, LoggerLevel defaultLevel) {
 		if (t == null) {
-			return LoggerLevel.ERROR;
+			return defaultLevel;
 		}
 		for (final ExceptionSpec spec : specs) {
 			if (t.getClass().equals(spec.exception())) {
 				return spec.level();
 			}
 		}
-		return LoggerLevel.ERROR;
+		return defaultLevel;
 	}
 
 	/**
