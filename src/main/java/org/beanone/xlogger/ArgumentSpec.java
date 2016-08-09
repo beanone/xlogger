@@ -13,7 +13,8 @@ public interface ArgumentSpec<T> {
 	 * Describes the passed in argument Object.
 	 *
 	 * @param arg
-	 * @return
+	 *            the object to be turned into String
+	 * @return the Strign rendered from the passed in arg.
 	 */
 	@SuppressWarnings("unchecked")
 	default String asString(Object arg) {
@@ -24,7 +25,8 @@ public interface ArgumentSpec<T> {
 	 * Describes the passed in argument.
 	 *
 	 * @param arg
-	 * @return
+	 *            the object to be turned into String
+	 * @return the Strign rendered from the passed in arg.
 	 */
 	String describe(T arg);
 }

@@ -21,7 +21,7 @@ public class AbstractMethodLoggerTest {
 		        .forClass(String.class);
 		final ArgumentCaptor<Throwable> captor2 = ArgumentCaptor
 		        .forClass(Throwable.class);
-		Mockito.verify(MockMethodLogger.MOCK_LOGGER, Mockito.atLeast(8))
+		Mockito.verify(MockMethodLogger.MOCK_LOGGER, Mockito.atLeast(10))
 		        .trace(captor1.capture(), captor2.capture());
 	}
 
@@ -31,7 +31,12 @@ public class AbstractMethodLoggerTest {
 		try {
 			clazz.methodException();
 		} catch (final IllegalArgumentException e) {
-
+			final ArgumentCaptor<String> captor1 = ArgumentCaptor
+			        .forClass(String.class);
+			final ArgumentCaptor<Throwable> captor2 = ArgumentCaptor
+			        .forClass(Throwable.class);
+			Mockito.verify(MockMethodLogger.MOCK_LOGGER, Mockito.times(1))
+			        .error(captor1.capture(), captor2.capture());
 		}
 	}
 }

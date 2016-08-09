@@ -15,9 +15,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface LoggerSpec {
 	/**
-	 * @return the {@link LoggerLevel} to use for the method annotated.
+	 * @return exception level mapping.
 	 */
-	LoggerLevel exceptionLevel() default LoggerLevel.ERROR;
+	ExceptionSpec[] exceptionLevel() default {};
 
 	/**
 	 * @return the {@link LoggerLevel} to use for the method annotated.

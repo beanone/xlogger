@@ -1,17 +1,35 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.beanone</groupId>
 	<artifactId>xlogger</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>XLogger</name>
-	<description>An Aspect logging API</description>
+	<version>1.0.0</version>
 
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>A aspect oriented logging API</description>
+	<url>https://github.com/beanone/xlogger</url>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>git@github.com:hongyan99/xlogger.git</connection>
+		<developerConnection>git@github.com:hongyan99/xlogger.git</developerConnection>
+		<url>https://github.com/beanone/xlogger.git</url>
+	</scm>
 	<properties>
    	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<aspectj.version>1.8.9</aspectj.version>
 		<aspectj.mavem.plugin.version>1.8</aspectj.mavem.plugin.version>
         <java.source-target.version>1.8</java.source-target.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+		<sonar-jacoco.version>3.8</sonar-jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -45,11 +63,46 @@
 			<version>1.7.5</version>
 		</dependency>
 	</dependencies>
+
+	<developers>
+		<developer>
+			<id>hongyan</id>
+			<name>Hongyan Li</name>
+			<email>hongyan99@yahoo.com</email>
+			<roles>
+				<role>lead</role>
+			</roles>
+			<url>https://www.linkedin.com/in/hongyan99</url>
+		</developer>
+	</developers>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+	
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.3</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+				<version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.source-target.version}</source>
                     <target>${java.source-target.version}</target>
@@ -57,6 +110,88 @@
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.3</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+			<plugin>
+	            <groupId>external.atlassian.jgitflow</groupId>
+	            <artifactId>jgitflow-maven-plugin</artifactId>
+	            <version>1.0-m5.1</version>
+				<configuration>
+					<!-- Enable this to push to origin using SSH keys -->
+					<enableSshAgent>true</enableSshAgent>
+					<!-- Keep your maven submodules at the same version as the parent POM -->
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<!-- Pusing in-development features to origin allows all devs to see 
+						what each other are working on -->
+					<pushFeatures>true</pushFeatures>
+					<!-- This allows the CI server (e.g. Jenkins) to automatically push 
+						new releases to origin; you can then either manually deploy them or, if you 
+						are doing Continuous Deployments, auto-deploy them to prod -->
+					<pushReleases>true</pushReleases>
+					<!-- Hot Fixes should be pushed to origin as well so that any dev can 
+						pick them up -->
+					<pushHotfixes>true</pushHotfixes>
+					<!-- Prevents deployments from dev workstations so that they can be 
+						done by a CI server -->
+					<noDeploy>true</noDeploy>
+					<flowInitContext>
+						<!-- You can customize your development branch name. Why? Because it's 
+							faster to type 'git push origin dvlp' than 'git push origin develop' ;-) -->
+						<developBranchName>develop</developBranchName>
+						<!-- You can also customize your tag prefixes -->
+						<versionTagPrefix>rev-</versionTagPrefix>
+					</flowInitContext>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
@@ -91,4 +226,40 @@
 
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<!-- Minimal supported version is 2.4 -->
+						<version>2.13</version>
+						<configuration>
+							<properties>
+								<property>
+									<name>listener</name>
+									<value>org.sonar.java.jacoco.JUnitListener</value>
+								</property>
+							</properties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<dependencies>
+				<dependency>
+					<groupId>org.sonarsource.java</groupId>
+					<artifactId>sonar-jacoco-listeners</artifactId>
+					<version>${sonar-jacoco.version}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<issueManagement>
+		<url>https://github.com/beanone/xlogger/issues</url>
+	</issueManagement>
 </project>
