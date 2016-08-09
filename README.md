@@ -2,7 +2,7 @@
 
 A non-intrusive logging framework implemented using AspectJ. 
 
-This API is implemented to minimize the need to customize or update the existing code base.
+The goal of this API is to remove the need to add any logging statement into your application with minimum configuration.
 
 ## Usage
 
