@@ -30,6 +30,7 @@
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+		<sonar-jacoco.version>3.8</sonar-jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -226,4 +227,40 @@
 
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<!-- Minimal supported version is 2.4 -->
+						<version>2.13</version>
+						<configuration>
+							<properties>
+								<property>
+									<name>listener</name>
+									<value>org.sonar.java.jacoco.JUnitListener</value>
+								</property>
+							</properties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<dependencies>
+				<dependency>
+					<groupId>org.sonarsource.java</groupId>
+					<artifactId>sonar-jacoco-listeners</artifactId>
+					<version>${sonar-jacoco.version}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<issueManagement>
+		<url>https://github.com/beanone/xlogger/issues</url>
+	</issueManagement>
 </project>

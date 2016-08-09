@@ -69,8 +69,8 @@ public abstract class AbstractMethodLogger {
 	/**
 	 * Fetches the {@link Logger} of the invoker.
 	 *
-	 * @param invoker
-	 *            the method invoker object.
+	 * @param clazz
+	 *            the class type of object that contains the method processed.
 	 * @return a Logger instance. The subclasses can override this as needed.
 	 */
 	protected Logger getLogger(final Class<?> clazz) {

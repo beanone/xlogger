@@ -13,12 +13,11 @@ public class LoggerSupport {
 	/**
 	 * The system default exception log level mapping.
 	 */
-	public static ExceptionSpec[] EXCEPTION_SPEC = new ExceptionSpec[0];
+	private static final ExceptionSpec[] EXCEPTION_SPEC = new ExceptionSpec[0];
 	/**
 	 * The system default LoggerSpec.
 	 */
-	public static LoggerSpec DEFAULT_LOGGER_SPEC = new LoggerSpec() {
-
+	private static final LoggerSpec DEFAULT_LOGGER_SPEC = new LoggerSpec() {
 		@Override
 		public Class<? extends Annotation> annotationType() {
 			return null;

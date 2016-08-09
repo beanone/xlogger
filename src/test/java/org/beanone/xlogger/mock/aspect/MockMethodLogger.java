@@ -33,6 +33,11 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	public void inAspect() {
 	}
 
+	@Pointcut("within(*Test)")
+	public void inTest() {
+
+	}
+
 	/**
 	 * An around advice to methods for logging of exception thrown from methods.
 	 * The default logging level is ERROR. A different advice can be defined to
@@ -45,7 +50,7 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	 * @param t
 	 *            the exception thrown by the method.
 	 */
-	@AfterThrowing(pointcut = "xloggerMock() && !inAspect() && !inFramework() && !trivial()", throwing = "t")
+	@AfterThrowing(pointcut = "xloggerMock() && !inAspect() && !inFramework() && !trivial() && !inTest()", throwing = "t")
 	public void logException(JoinPoint point, Throwable t) {
 		handleThrows(point, t, null, LoggerLevel.ERROR);
 	}
@@ -63,7 +68,7 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	 * @throws Throwable
 	 *             the exception thrown by the method advised.
 	 */
-	@Around("xloggerMock() && !inAspect() && !inFramework() && !trivial()")
+	@Around("xloggerMock() && !inAspect() && !inFramework() && !trivial() && !inTest()")
 	public Object logInvocation(ProceedingJoinPoint point) throws Throwable {
 		return handle(point, LoggerLevel.TRACE);
 	}
