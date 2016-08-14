@@ -76,7 +76,7 @@ public class MockMethodLogger extends AbstractMethodLogger {
 	/**
 	 * This pointcut represents the execution of any getter and setter method.
 	 */
-	@Pointcut("execution(* *..*.get*(..)) || execution(* *..*.set*(..)) || execution(* *..*.is*(..)) || execution(* *..*.add*(..))")
+	@Pointcut("execution(* *..*.get*(..)) || execution(* *..*.set*(..)) || execution(* *..*.is*(..)) || execution(* *..*.add*(..)) || execution(* *..*.equals(..)) || execution(* *..*.hashCode(..))")
 	public void trivial() {
 
 	}

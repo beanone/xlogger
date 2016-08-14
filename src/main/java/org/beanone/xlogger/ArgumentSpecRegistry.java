@@ -43,6 +43,7 @@ public class ArgumentSpecRegistry {
 	 * @return a {@link ArgumentSpecRegistry} for the passed in partition.
 	 */
 	public static ArgumentSpecRegistry current(String partitionName) {
+		LogExecutionContext.current().setPartition(partitionName);
 		return StringUtils.isBlank(partitionName) ? BASE
 		        : partitions.get(partitionName.trim());
 	}
@@ -75,6 +76,11 @@ public class ArgumentSpecRegistry {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> ArgumentSpec<T> getSpec(Class<T> clazz) {
+		if (Iterable.class.isAssignableFrom(clazz)) {
+			return (ArgumentSpec<T>) this.argumentSpecs.get(Iterable.class);
+		} else if (Map.class.isAssignableFrom(clazz)) {
+			return (ArgumentSpec<T>) this.argumentSpecs.get(Map.class);
+		}
 		return (ArgumentSpec<T>) this.argumentSpecs.get(clazz);
 	}
 

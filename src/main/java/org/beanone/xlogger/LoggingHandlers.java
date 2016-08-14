@@ -32,6 +32,9 @@ public class LoggingHandlers {
 			logger.trace(snf.asString(), t);
 		}
 	};
+	public static final LoggingHandler SKIP_HANDLER = (logger, snf, t) -> {
+		// do nothing
+	};
 
 	private LoggingHandlers() {
 		// private for utility

@@ -13,7 +13,8 @@ public enum LoggerLevel implements LoggingHandler {
 	WARN(LoggingHandlers.WARN_HANDLER),
 	DEBUG(LoggingHandlers.DEBUG_HANDLER),
 	INFO(LoggingHandlers.INFO_HANDLER),
-	TRACE(LoggingHandlers.TRACE_HANDLER);
+	TRACE(LoggingHandlers.TRACE_HANDLER),
+	SKIP(LoggingHandlers.SKIP_HANDLER);
 
 	private LoggingHandler handler;
 

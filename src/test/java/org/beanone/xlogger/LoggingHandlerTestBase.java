@@ -30,7 +30,7 @@ public abstract class LoggingHandlerTestBase {
 		assertCalled(getLoggingHandler(), testMessage, 0);
 	}
 
-	private String assertCalled(final LoggingHandler handler,
+	protected final String assertCalled(final LoggingHandler handler,
 	        final String testMessage, final int count) {
 		final ArgumentCaptor<String> captor = ArgumentCaptor
 		        .forClass(String.class);

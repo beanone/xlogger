@@ -91,14 +91,14 @@ public abstract class AbstractMethodLogger {
 	 */
 	protected Object handle(ProceedingJoinPoint pjp, LoggerLevel defaultLevel)
 	        throws Throwable {
-		final Method method = getMethod(pjp);
-		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
 		final Signature signature = pjp.getStaticPart().getSignature();
-
-		final LoggingContext context = new LoggingContext()
-		        .logger(getLogger(signature.getDeclaringType()))
-		        .registry(ArgumentSpecRegistry.current(spec.partition()));
 		if (signature instanceof MethodSignature) {
+			final Method method = getMethod(pjp);
+			final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
+
+			final LoggingContext context = new LoggingContext()
+			        .logger(getLogger(signature.getDeclaringType()))
+			        .registry(ArgumentSpecRegistry.current(spec.partition()));
 			final MethodSignature ms = (MethodSignature) signature;
 			final Object[] args = pjp.getArgs();
 			final LoggerLevel level = spec.level() == null ? defaultLevel
@@ -140,27 +140,30 @@ public abstract class AbstractMethodLogger {
 	 */
 	protected void handleThrows(JoinPoint pjp, Throwable t,
 	        ExceptionSpec[] defaultSpecs, LoggerLevel defaultLevel) {
-		final Method method = getMethod(pjp);
-		final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
-		final Signature signature = pjp.getStaticPart().getSignature();
+		if (LogExecutionContext.current().checkSetHandlingException(t)) {
+			final Signature signature = pjp.getStaticPart().getSignature();
+			if (signature instanceof MethodSignature) {
+				final Method method = getMethod(pjp);
+				final LoggerSpec spec = LoggerSupport.getLoggerSpec(method);
 
-		final LoggingContext context = new LoggingContext()
-		        .logger(getLogger(signature.getDeclaringType()))
-		        .registry(ArgumentSpecRegistry.current(spec.partition()));
-		if (signature instanceof MethodSignature) {
-			final MethodSignature ms = (MethodSignature) signature;
-			ExceptionSpec[] exceptionSpecs = spec.exceptionLevel();
-			exceptionSpecs = (exceptionSpecs == null
-			        || exceptionSpecs.length == 0 && defaultSpecs != null)
-			                ? defaultSpecs : exceptionSpecs;
-			LoggerSupport
-			        .doLog(context.tag("Exception").methodName(method.getName())
-			                .handler(LoggerSupport.getExceptionLevel(
-			                        exceptionSpecs, t, defaultLevel))
-			                .exception(t).names(ms.getParameterNames())
-			                .args(pjp.getArgs()));
-		} else {
-			logWrongUseOfAspect(signature);
+				final LoggingContext context = new LoggingContext()
+				        .logger(getLogger(signature.getDeclaringType()))
+				        .registry(
+				                ArgumentSpecRegistry.current(spec.partition()));
+				final MethodSignature ms = (MethodSignature) signature;
+				ExceptionSpec[] exceptionSpecs = spec.exceptionLevel();
+				exceptionSpecs = (exceptionSpecs == null
+				        || exceptionSpecs.length == 0 && defaultSpecs != null)
+				                ? defaultSpecs : exceptionSpecs;
+				LoggerSupport.doLog(context.tag("Exception")
+				        .methodName(method.getName())
+				        .handler(LoggerSupport.getExceptionLevel(exceptionSpecs,
+				                t, defaultLevel))
+				        .exception(t).names(ms.getParameterNames())
+				        .args(pjp.getArgs()));
+			} else {
+				logWrongUseOfAspect(signature);
+			}
 		}
 	}
 }
