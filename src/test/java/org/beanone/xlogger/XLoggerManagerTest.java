@@ -6,8 +6,12 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.beanone.xlogger.configure.impl.MethodConfigHandler;
+import org.beanone.xlogger.configure.impl.NamespacedConfigHandler;
+import org.beanone.xlogger.configure.impl.PackageConfigHandler;
 import org.beanone.xlogger.mock.MockException;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "classpath:xlogger-test-context.xml" })
 @Aspect
 public class XLoggerManagerTest {
+	@Autowired
+	private MethodConfigHandler methodHandler;
+
+	@Autowired
+	private NamespacedConfigHandler namespaceHandler;
+
+	@Autowired
+	private PackageConfigHandler packageHandler;
+
 	@Autowired
 	private XLoggerManager manager;
 
@@ -36,6 +49,15 @@ public class XLoggerManagerTest {
 	public ProceedingJoinPoint myTrivialMethods(ProceedingJoinPoint pjp)
 	        throws Throwable {
 		return pjp;
+	}
+
+	@Before
+	public void setup() throws Exception {
+		resetAll();
+		final InputStream stream = this.getClass()
+		        .getResourceAsStream("/xlogger.properties");
+		Assert.assertNotNull(stream);
+		this.manager.init(stream);
 	}
 
 	@Test
@@ -62,14 +84,6 @@ public class XLoggerManagerTest {
 	}
 
 	@Test
-	public void testInit() throws Exception {
-		final InputStream stream = this.getClass()
-		        .getResourceAsStream("/xlogger.properties");
-		Assert.assertNotNull(stream);
-		this.manager.init(stream);
-	}
-
-	@Test
 	public void testNamespaceConfiguration() {
 		final JoinPoint point = getJointPoint();
 		Assert.assertEquals(LoggerLevel.DEBUG,
@@ -83,6 +97,12 @@ public class XLoggerManagerTest {
 	private ProceedingJoinPoint myPrivateMethod() {
 		// do nothing
 		return null;
+	}
+
+	private void resetAll() {
+		this.namespaceHandler.reset();
+		this.methodHandler.reset();
+		this.packageHandler.reset();
 	}
 
 	ProceedingJoinPoint getJointPoint() {

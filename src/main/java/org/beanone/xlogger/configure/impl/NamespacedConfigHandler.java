@@ -71,6 +71,12 @@ public class NamespacedConfigHandler extends AbstractConfigHandler<JoinPoint> {
 		});
 	}
 
+	public void reset() {
+		this.configEntries.clear();
+		this.defaultLevels.clear();
+		this.nsMap.clear();
+	}
+
 	public void setFilterHandler(NamespaceFilterHandler filterHandler) {
 		this.filterHandler = filterHandler;
 	}
@@ -137,11 +143,5 @@ public class NamespacedConfigHandler extends AbstractConfigHandler<JoinPoint> {
 		this.configEntries.put(key, toLoggerLevel(value));
 		final String ns = getNamespace(key);
 		initNamespaceIfNotYet(ns);
-	}
-
-	void reset() {
-		this.configEntries.clear();
-		this.defaultLevels.clear();
-		this.nsMap.clear();
 	}
 }

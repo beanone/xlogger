@@ -63,6 +63,11 @@ public class PackageConfigHandler extends AbstractConfigHandler<JoinPoint> {
 		return "xlogger.package.";
 	}
 
+	public void reset() {
+		this.configEntries.clear();
+		this.defaultLevels.clear();
+	}
+
 	@Override
 	protected void configDefault(String key, String value) {
 		this.defaultLevels.put(key, toLoggerLevel(value));
@@ -77,10 +82,5 @@ public class PackageConfigHandler extends AbstractConfigHandler<JoinPoint> {
 	        final MethodAccessLevel access) {
 		final String key = packageName + '.' + access.name().toLowerCase();
 		return this.configEntries.get(key);
-	}
-
-	void reset() {
-		this.configEntries.clear();
-		this.defaultLevels.clear();
 	}
 }

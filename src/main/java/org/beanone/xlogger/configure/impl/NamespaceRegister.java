@@ -24,6 +24,7 @@ public class NamespaceRegister implements Predicate<JoinPoint> {
 	 * Construct this for a namespace.
 	 *
 	 * @param namespace
+	 *            the namespace this register is for.
 	 */
 	public NamespaceRegister(String namespace) {
 		this.namespace = namespace;

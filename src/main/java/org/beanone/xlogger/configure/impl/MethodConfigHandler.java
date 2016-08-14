@@ -119,6 +119,11 @@ public class MethodConfigHandler extends AbstractConfigHandler<JoinPoint>
 		}
 	}
 
+	public void reset() {
+		this.configEntities.clear();
+		this.defaultLevel.set(LoggerLevel.TRACE);
+	}
+
 	private LoggerLevel getLoggerByPackage(JoinPoint point) {
 		final LoggerLevel level = this.packageHandler.getConfiguration(point);
 		return level == null ? this.defaultLevel.get() : level;
@@ -137,10 +142,5 @@ public class MethodConfigHandler extends AbstractConfigHandler<JoinPoint>
 	@Override
 	protected boolean isDefaultKey(final String key) {
 		return "*".equals(key);
-	}
-
-	void reset() {
-		this.configEntities.clear();
-		this.defaultLevel.set(LoggerLevel.TRACE);
 	}
 }
