@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.aspectj.lang.JoinPoint;
+import org.beanone.xlogger.AspectContext;
 
 /**
  * Register for matching conditions for namespaces.
@@ -13,7 +14,7 @@ import org.aspectj.lang.JoinPoint;
  * @author Hongyan Li
  *
  */
-public class NamespaceRegister implements Predicate<JoinPoint> {
+public class NamespaceRegister implements Predicate<AspectContext> {
 	private final String namespace;
 	private final List<Predicate<Method>> methodBased = new ArrayList<>();
 	private final List<Predicate<Package>> packageBased = new ArrayList<>();
@@ -75,9 +76,10 @@ public class NamespaceRegister implements Predicate<JoinPoint> {
 	}
 
 	@Override
-	public boolean test(JoinPoint point) {
-		final Method method = ConfigUtils.getMethod(point);
-		return acceptJoinPoint(point) || acceptClass(method.getDeclaringClass())
+	public boolean test(AspectContext context) {
+		final Method method = context.getMethod();
+		return acceptJoinPoint(context.getJoinPoint())
+		        || acceptClass(method.getDeclaringClass())
 		        || acceptPackage(method.getDeclaringClass().getPackage())
 		        || acceptMethod(method);
 	}

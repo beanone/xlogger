@@ -1,13 +1,11 @@
 package org.beanone.xlogger.configure.impl;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.aspectj.lang.JoinPoint;
+import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
-import org.beanone.xlogger.MethodAccessLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,8 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class NamespacedConfigHandler extends AbstractConfigHandler<JoinPoint> {
+public class NamespacedConfigHandler
+        extends AbstractConfigHandler<AspectContext> {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NamespacedConfigHandler.class);
 
@@ -32,15 +31,13 @@ public class NamespacedConfigHandler extends AbstractConfigHandler<JoinPoint> {
 	private NamespaceFilterHandler filterHandler;
 
 	@Override
-	public LoggerLevel getConfiguration(JoinPoint point) {
+	public LoggerLevel getConfiguration(AspectContext context) {
 		final Optional<NamespaceRegister> register = this.nsMap.values()
-		        .stream().filter(p -> p.test(point)).findFirst();
+		        .stream().filter(p -> p.test(context)).findFirst();
 		if (register.isPresent()) {
 			final String ns = register.get().getNamespace();
-			final Method method = ConfigUtils.getMethod(point);
-			final MethodAccessLevel access = ConfigUtils.getAccessLevel(method);
 			final LoggerLevel level = this.configEntries
-			        .get(ns + '.' + access.name().toLowerCase());
+			        .get(ns + '.' + context.getAccess().name().toLowerCase());
 			return level == null ? this.defaultLevels.get(ns) : level;
 		}
 		return null;

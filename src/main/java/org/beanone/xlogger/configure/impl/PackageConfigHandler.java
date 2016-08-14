@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aspectj.lang.JoinPoint;
+import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
 import org.beanone.xlogger.MethodAccessLevel;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class PackageConfigHandler extends AbstractConfigHandler<JoinPoint> {
+public class PackageConfigHandler extends AbstractConfigHandler<AspectContext> {
 	private class PackageWalker {
 		private final StringBuilder builder;
 
@@ -44,13 +44,13 @@ public class PackageConfigHandler extends AbstractConfigHandler<JoinPoint> {
 	private final Map<String, LoggerLevel> defaultLevels = new HashMap<>();
 
 	@Override
-	public LoggerLevel getConfiguration(JoinPoint point) {
-		final Method method = ConfigUtils.getMethod(point);
+	public LoggerLevel getConfiguration(AspectContext context) {
+		final Method method = context.getMethod();
 		final Package pkg = method.getDeclaringClass().getPackage();
-		final MethodAccessLevel access = ConfigUtils.getAccessLevel(method);
 		final PackageWalker pw = new PackageWalker(pkg);
 		LoggerLevel level;
-		while ((level = resolveLoggerLevel(pw.current(), access)) == null) {
+		while ((level = resolveLoggerLevel(pw.current(),
+		        context.getAccess())) == null) {
 			if (!pw.up()) {
 				break;
 			}

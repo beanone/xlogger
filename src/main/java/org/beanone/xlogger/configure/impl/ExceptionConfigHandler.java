@@ -3,6 +3,7 @@ package org.beanone.xlogger.configure.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
 import org.beanone.xlogger.configure.ConfigHandler;
 import org.springframework.stereotype.Component;
@@ -14,13 +15,14 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component(ConfigHandler.EXCEPTION_HANDLER)
-public class ExceptionConfigHandler extends AbstractConfigHandler<Throwable> {
+public class ExceptionConfigHandler
+        extends AbstractConfigHandler<AspectContext> {
 	private final Map<String, LoggerLevel> configEntries = new HashMap<>();
 
 	@Override
-	public LoggerLevel getConfiguration(Throwable exception) {
+	public LoggerLevel getConfiguration(AspectContext context) {
 		final LoggerLevel level = this.configEntries
-		        .get(exception.getClass().getName());
+		        .get(context.getException().getClass().getName());
 		return level == null ? LoggerLevel.ERROR : level;
 	}
 

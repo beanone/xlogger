@@ -1,8 +1,10 @@
 package org.beanone.xlogger.configure.impl;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,32 +19,34 @@ public class PackageConfigHandlerTest {
 
 	@Test
 	public void testGetConfigurationWithMatchingDefaulting() {
-		final ProceedingJoinPoint jp = myPrivateMethod();
+		final AspectContext context = toContext(myPrivateMethod());
 		final PackageConfigHandler handler = new PackageConfigHandler();
-		Assert.assertNull(handler.getConfiguration(jp));
+		Assert.assertNull(handler.getConfiguration(context));
 		handler.addConfigEntry("xlogger.package."
 		        + this.getClass().getPackage().getName() + ".*", "INFO");
-		Assert.assertEquals(LoggerLevel.INFO, handler.getConfiguration(jp));
+		Assert.assertEquals(LoggerLevel.INFO,
+		        handler.getConfiguration(context));
 	}
 
 	@Test
 	public void testGetConfigurationWithMatchingModifier() {
-		final ProceedingJoinPoint jp = myPrivateMethod();
+		final AspectContext context = toContext(myPrivateMethod());
 		final PackageConfigHandler handler = new PackageConfigHandler();
-		Assert.assertNull(handler.getConfiguration(jp));
+		Assert.assertNull(handler.getConfiguration(context));
 		handler.addConfigEntry("xlogger.package."
 		        + this.getClass().getPackage().getName() + ".private", "DEBUG");
-		Assert.assertEquals(LoggerLevel.DEBUG, handler.getConfiguration(jp));
+		Assert.assertEquals(LoggerLevel.DEBUG,
+		        handler.getConfiguration(context));
 	}
 
 	@Test
 	public void testGetConfigurationWithoutMatchingConfiguration() {
-		final ProceedingJoinPoint jp = myPrivateMethod();
+		final AspectContext context = toContext(myPrivateMethod());
 		final PackageConfigHandler handler = new PackageConfigHandler();
-		Assert.assertNull(handler.getConfiguration(jp));
+		Assert.assertNull(handler.getConfiguration(context));
 		handler.addConfigEntry("xlogger.package."
 		        + this.getClass().getPackage().getName() + ".public", "INFO");
-		Assert.assertNull(handler.getConfiguration(jp));
+		Assert.assertNull(handler.getConfiguration(context));
 	}
 
 	@Test
@@ -53,6 +57,10 @@ public class PackageConfigHandlerTest {
 	private ProceedingJoinPoint myPrivateMethod() {
 		// do nothing
 		return null;
+	}
+
+	private AspectContext toContext(JoinPoint point) {
+		return new AspectContext(point, null);
 	}
 
 }

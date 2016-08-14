@@ -1,6 +1,7 @@
 package org.beanone.xlogger;
 
 import java.io.InputStream;
+import java.util.Collection;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -33,6 +35,9 @@ public class XLoggerManagerTest {
 
 	@Autowired
 	private XLoggerManager manager;
+
+	@Autowired
+	private CacheManager cacheManager;
 
 	@Around("execution (* *..*.XLoggerManagerTest.*Method(..))")
 	public ProceedingJoinPoint myAdvice(ProceedingJoinPoint pjp)
@@ -63,19 +68,22 @@ public class XLoggerManagerTest {
 	@Test
 	public void testGetExceptionLoggerLevel() throws Exception {
 		Assert.assertEquals(LoggerLevel.WARN,
-		        this.manager.getExceptionLoggerLevel(new MockException()));
+		        this.manager.getExceptionLoggerLevel(
+		                new AspectContext(null, new MockException())));
 		Assert.assertEquals(LoggerLevel.ERROR,
-		        this.manager.getExceptionLoggerLevel(new Exception()));
+		        this.manager.getExceptionLoggerLevel(
+		                new AspectContext(null, new Exception())));
 	}
 
 	@Test
 	public void testGetMethodLoggerLevel() throws Exception {
-		Assert.assertEquals(LoggerLevel.INFO,
-		        this.manager.getMethodLoggerLevel(myPublicMethod()));
+		Assert.assertEquals(LoggerLevel.INFO, this.manager.getMethodLoggerLevel(
+		        new AspectContext(myPublicMethod(), null)));
 		Assert.assertEquals(LoggerLevel.DEBUG,
-		        this.manager.getMethodLoggerLevel(myPackageMethod()));
-		Assert.assertEquals(LoggerLevel.SKIP,
-		        this.manager.getMethodLoggerLevel(myPrivateMethod()));
+		        this.manager.getMethodLoggerLevel(
+		                new AspectContext(myPackageMethod(), null)));
+		Assert.assertEquals(LoggerLevel.SKIP, this.manager.getMethodLoggerLevel(
+		        new AspectContext(myPrivateMethod(), null)));
 	}
 
 	@Test
@@ -86,12 +94,18 @@ public class XLoggerManagerTest {
 	@Test
 	public void testNamespaceConfiguration() {
 		final JoinPoint point = getJointPoint();
-		Assert.assertEquals(LoggerLevel.DEBUG,
-		        this.manager.getMethodLoggerLevel(point));
+		Assert.assertEquals(LoggerLevel.DEBUG, this.manager
+		        .getMethodLoggerLevel(new AspectContext(point, null)));
 		this.manager.getNamespaceSupporter()
 		        .registerJoinPointCondition("trivial", p -> p == point);
-		Assert.assertEquals(LoggerLevel.SKIP,
-		        this.manager.getMethodLoggerLevel(point));
+		clearCaches();
+		Assert.assertEquals(LoggerLevel.SKIP, this.manager
+		        .getMethodLoggerLevel(new AspectContext(point, null)));
+	}
+
+	private void clearCaches() {
+		final Collection<String> names = this.cacheManager.getCacheNames();
+		names.forEach(n -> this.cacheManager.getCache(n).clear());
 	}
 
 	private ProceedingJoinPoint myPrivateMethod() {
@@ -103,6 +117,7 @@ public class XLoggerManagerTest {
 		this.namespaceHandler.reset();
 		this.methodHandler.reset();
 		this.packageHandler.reset();
+		clearCaches();
 	}
 
 	ProceedingJoinPoint getJointPoint() {

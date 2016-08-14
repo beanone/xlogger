@@ -4,6 +4,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
 import org.beanone.xlogger.mock.MockClass;
 import org.junit.Assert;
@@ -35,7 +36,7 @@ public class NamespacedConfigHandlerTest {
 		handler.getRegister("domain")
 		        .registerClassCondition(c -> c.equals(this.getClass()));
 		Assert.assertEquals(LoggerLevel.DEBUG,
-		        handler.getConfiguration(myPrivateMethod()));
+		        handler.getConfiguration(toContext(myPrivateMethod())));
 	}
 
 	@Test
@@ -45,7 +46,7 @@ public class NamespacedConfigHandlerTest {
 		handler.getRegister("domain")
 		        .registerClassCondition(c -> c.equals(this.getClass()));
 		Assert.assertEquals(LoggerLevel.DEBUG,
-		        handler.getConfiguration(myPrivateMethod()));
+		        handler.getConfiguration(toContext(myPrivateMethod())));
 	}
 
 	@Test
@@ -54,7 +55,8 @@ public class NamespacedConfigHandlerTest {
 		handler.addConfigEntry("xlogger.ns.domain.public", "DEBUG");
 		handler.getRegister("domain")
 		        .registerClassCondition(c -> c.equals(this.getClass()));
-		Assert.assertNull(handler.getConfiguration(myPrivateMethod()));
+		Assert.assertNull(
+		        handler.getConfiguration(toContext(myPrivateMethod())));
 	}
 
 	@Test
@@ -125,17 +127,22 @@ public class NamespacedConfigHandlerTest {
 		final NamespaceFilterHandler filterHandler = new NamespaceFilterHandler();
 		handler.setFilterHandler(filterHandler);
 		handler.postConfigure();
-		Assert.assertNull(handler.getConfiguration(point));
+		Assert.assertNull(handler.getConfiguration(toContext(point)));
 		for (int i = 0; i < configurations.length; i++) {
 			filterHandler.addConfigEntry(filterPrefix + '.' + i,
 			        configurations[i]);
 		}
 		handler.postConfigure();
 		if (foundLogger) {
-			Assert.assertEquals(expected, handler.getConfiguration(point));
+			Assert.assertEquals(expected,
+			        handler.getConfiguration(toContext(point)));
 		} else {
-			Assert.assertNull(handler.getConfiguration(point));
+			Assert.assertNull(handler.getConfiguration(toContext(point)));
 		}
+	}
+
+	private AspectContext toContext(JoinPoint point) {
+		return new AspectContext(point, null);
 	}
 
 }

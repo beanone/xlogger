@@ -11,6 +11,7 @@ import org.beanone.xlogger.configure.ConfigHandler;
 import org.beanone.xlogger.configure.NamespaceSupporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,32 +21,34 @@ public class XLoggerManager {
 
 	@Autowired
 	@Qualifier(ConfigHandler.METHOD_HANDLER)
-	private ConfigHandler<JoinPoint, LoggerLevel> methodConfigHandler;
+	private ConfigHandler<AspectContext, LoggerLevel> methodConfigHandler;
 
 	@Autowired
 	@Qualifier(ConfigHandler.EXCEPTION_HANDLER)
-	private ConfigHandler<Throwable, LoggerLevel> exceptionConfigHandler;
+	private ConfigHandler<AspectContext, LoggerLevel> exceptionConfigHandler;
 
 	/**
 	 * Retrieves the {@link LoggerLevel} for the passed in {@link Throwable}.
 	 *
-	 * @param exception
-	 *            a {@link Throwable}.
+	 * @param context
+	 *            an {@link AspectContext}.
 	 * @return a {@link LoggerLevel}.
 	 */
-	public LoggerLevel getExceptionLoggerLevel(Throwable exception) {
-		return getExceptionConfigHandler().getConfiguration(exception);
+	@Cacheable(value = XLoggerConfiguration.EXCEPTION_LOGGING_CACHE_ID, keyGenerator = ExceptionLoggingCacheKeyGenerator.NAME)
+	public LoggerLevel getExceptionLoggerLevel(AspectContext context) {
+		return getExceptionConfigHandler().getConfiguration(context);
 	}
 
 	/**
 	 * Retrieves the {@link LoggerLevel} for the passed in {@link JoinPoint}.
 	 *
-	 * @param point
-	 *            a {@link JoinPoint}.
+	 * @param context
+	 *            an {@link AspectContext}.
 	 * @return a {@link LoggerLevel}.
 	 */
-	public LoggerLevel getMethodLoggerLevel(JoinPoint point) {
-		return getMethodConfigHandler().getConfiguration(point);
+	@Cacheable(value = XLoggerConfiguration.METHOD_LOGGING_CACHE_ID, keyGenerator = MethodLoggingCacheKeyGenerator.NAME)
+	public LoggerLevel getMethodLoggerLevel(AspectContext context) {
+		return getMethodConfigHandler().getConfiguration(context);
 	}
 
 	/**
@@ -85,11 +88,11 @@ public class XLoggerManager {
 		});
 	}
 
-	private ConfigHandler<Throwable, LoggerLevel> getExceptionConfigHandler() {
+	private ConfigHandler<AspectContext, LoggerLevel> getExceptionConfigHandler() {
 		return this.exceptionConfigHandler;
 	}
 
-	private ConfigHandler<JoinPoint, LoggerLevel> getMethodConfigHandler() {
+	private ConfigHandler<AspectContext, LoggerLevel> getMethodConfigHandler() {
 		return this.methodConfigHandler;
 	}
 }

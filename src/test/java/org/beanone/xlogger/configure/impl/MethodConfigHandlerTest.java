@@ -4,6 +4,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,24 +41,24 @@ public class MethodConfigHandlerTest {
 	public void testGetConfigurationPackage() {
 		resetAll();
 		setupMethodLogger();
-		Assert.assertEquals(LoggerLevel.TRACE,
-		        this.methodHandler.getConfiguration(myPackageMethod()));
+		Assert.assertEquals(LoggerLevel.TRACE, this.methodHandler
+		        .getConfiguration(toContext(myPackageMethod())));
 	}
 
 	@Test
 	public void testGetConfigurationPrivate() {
 		resetAll();
 		setupMethodLogger();
-		Assert.assertEquals(LoggerLevel.SKIP,
-		        this.methodHandler.getConfiguration(myPrivateMethod()));
+		Assert.assertEquals(LoggerLevel.SKIP, this.methodHandler
+		        .getConfiguration(toContext(myPrivateMethod())));
 	}
 
 	@Test
 	public void testGetConfigurationPublic() {
 		resetAll();
 		setupMethodLogger();
-		Assert.assertEquals(LoggerLevel.INFO,
-		        this.methodHandler.getConfiguration(myPublicMethod()));
+		Assert.assertEquals(LoggerLevel.INFO, this.methodHandler
+		        .getConfiguration(toContext(myPublicMethod())));
 	}
 
 	@Test
@@ -86,8 +87,8 @@ public class MethodConfigHandlerTest {
 
 		this.methodHandler.registerClassCondition("important",
 		        c -> c.equals(this.getClass()));
-		Assert.assertEquals(LoggerLevel.INFO,
-		        this.methodHandler.getConfiguration(myPackageMethod()));
+		Assert.assertEquals(LoggerLevel.INFO, this.methodHandler
+		        .getConfiguration(toContext(myPackageMethod())));
 	}
 
 	@Test
@@ -102,7 +103,7 @@ public class MethodConfigHandlerTest {
 		this.methodHandler.registerJoinPointCondition("trivial",
 		        p -> p == point);
 		Assert.assertEquals(LoggerLevel.DEBUG,
-		        this.methodHandler.getConfiguration(point));
+		        this.methodHandler.getConfiguration(toContext(point)));
 	}
 
 	@Test
@@ -117,12 +118,12 @@ public class MethodConfigHandlerTest {
 
 		this.methodHandler.registerMethodCondition("important",
 		        m -> m.getName().equals("myPublicMethod"));
-		Assert.assertEquals(LoggerLevel.INFO,
-		        this.methodHandler.getConfiguration(myPublicMethod()));
-		Assert.assertEquals(LoggerLevel.WARN,
-		        this.methodHandler.getConfiguration(myPackageMethod()));
-		Assert.assertEquals(LoggerLevel.DEBUG,
-		        this.methodHandler.getConfiguration(myPrivateMethod()));
+		Assert.assertEquals(LoggerLevel.INFO, this.methodHandler
+		        .getConfiguration(toContext(myPublicMethod())));
+		Assert.assertEquals(LoggerLevel.WARN, this.methodHandler
+		        .getConfiguration(toContext(myPackageMethod())));
+		Assert.assertEquals(LoggerLevel.DEBUG, this.methodHandler
+		        .getConfiguration(toContext(myPrivateMethod())));
 	}
 
 	@Test
@@ -136,8 +137,8 @@ public class MethodConfigHandlerTest {
 
 		this.methodHandler.registerPackageCondition("trivial",
 		        p -> p.equals(this.getClass().getPackage()));
-		Assert.assertEquals(LoggerLevel.DEBUG,
-		        this.methodHandler.getConfiguration(myPackageMethod()));
+		Assert.assertEquals(LoggerLevel.DEBUG, this.methodHandler
+		        .getConfiguration(toContext(myPackageMethod())));
 	}
 
 	private ProceedingJoinPoint myPrivateMethod() {
@@ -173,9 +174,12 @@ public class MethodConfigHandlerTest {
 		        + this.getClass().getPackage().getName() + ".*", "dEbug");
 	}
 
+	private AspectContext toContext(JoinPoint point) {
+		return new AspectContext(point, null);
+	}
+
 	ProceedingJoinPoint myPackageMethod() {
 		// do nothing
 		return null;
 	}
-
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 import org.aspectj.lang.JoinPoint;
+import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
 import org.beanone.xlogger.MethodAccessLevel;
 import org.beanone.xlogger.configure.ConfigHandler;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component(ConfigHandler.METHOD_HANDLER)
-public class MethodConfigHandler extends AbstractConfigHandler<JoinPoint>
+public class MethodConfigHandler extends AbstractConfigHandler<AspectContext>
         implements NamespaceSupporter {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(MethodConfigHandler.class);
@@ -40,14 +41,12 @@ public class MethodConfigHandler extends AbstractConfigHandler<JoinPoint>
 	private PackageConfigHandler packageHandler;
 
 	@Override
-	public LoggerLevel getConfiguration(JoinPoint point) {
-		LoggerLevel level = this.namespaceHandler.getConfiguration(point);
+	public LoggerLevel getConfiguration(AspectContext context) {
+		LoggerLevel level = this.namespaceHandler.getConfiguration(context);
 		if (level == null) {
-			final Method method = ConfigUtils.getMethod(point);
-			final MethodAccessLevel access = ConfigUtils.getAccessLevel(method);
-			level = this.configEntities.get(access);
+			level = this.configEntities.get(context.getAccess());
 		}
-		return level == null ? getLoggerByPackage(point) : level;
+		return level == null ? getLoggerByPackage(context) : level;
 	}
 
 	public NamespacedConfigHandler getNamespaceHandler() {
@@ -124,8 +123,8 @@ public class MethodConfigHandler extends AbstractConfigHandler<JoinPoint>
 		this.defaultLevel.set(LoggerLevel.TRACE);
 	}
 
-	private LoggerLevel getLoggerByPackage(JoinPoint point) {
-		final LoggerLevel level = this.packageHandler.getConfiguration(point);
+	private LoggerLevel getLoggerByPackage(AspectContext context) {
+		final LoggerLevel level = this.packageHandler.getConfiguration(context);
 		return level == null ? this.defaultLevel.get() : level;
 	}
 
