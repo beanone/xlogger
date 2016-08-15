@@ -1,4 +1,4 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

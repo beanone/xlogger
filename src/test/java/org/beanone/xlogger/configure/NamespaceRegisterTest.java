@@ -1,4 +1,4 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.util.UUID;
 
@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.beanone.xlogger.AspectContext;
+import org.beanone.xlogger.configure.NamespaceRegister;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

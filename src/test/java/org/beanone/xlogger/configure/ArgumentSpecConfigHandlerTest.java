@@ -1,8 +1,9 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import org.beanone.xlogger.ArgumentSpec;
 import org.beanone.xlogger.ArgumentSpecRegistry;
 import org.beanone.xlogger.ConfiguredArgumentSpec;
+import org.beanone.xlogger.configure.ArgumentSpecConfigHandler;
 import org.junit.Assert;
 import org.junit.Test;
 

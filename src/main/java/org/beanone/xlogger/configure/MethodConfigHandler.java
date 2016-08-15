@@ -1,4 +1,4 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -8,10 +8,10 @@ import java.util.function.Predicate;
 
 import org.aspectj.lang.JoinPoint;
 import org.beanone.xlogger.AspectContext;
+import org.beanone.xlogger.ConfigHandler;
 import org.beanone.xlogger.LoggerLevel;
 import org.beanone.xlogger.MethodAccessLevel;
-import org.beanone.xlogger.configure.ConfigHandler;
-import org.beanone.xlogger.configure.NamespaceSupporter;
+import org.beanone.xlogger.NamespaceSupporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

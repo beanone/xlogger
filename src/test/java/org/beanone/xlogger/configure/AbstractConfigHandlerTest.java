@@ -1,9 +1,10 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.beanone.xlogger.configure.AbstractConfigHandler;
 import org.junit.Assert;
 import org.junit.Test;
 

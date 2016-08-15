@@ -1,4 +1,4 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import org.beanone.xlogger.configure.ConfigHandler;
+import org.beanone.xlogger.ConfigHandler;
 import org.springframework.stereotype.Component;
 
 /**

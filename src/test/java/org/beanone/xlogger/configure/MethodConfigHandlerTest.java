@@ -1,4 +1,4 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -6,6 +6,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.beanone.xlogger.AspectContext;
 import org.beanone.xlogger.LoggerLevel;
+import org.beanone.xlogger.configure.MethodConfigHandler;
+import org.beanone.xlogger.configure.NamespacedConfigHandler;
+import org.beanone.xlogger.configure.PackageConfigHandler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

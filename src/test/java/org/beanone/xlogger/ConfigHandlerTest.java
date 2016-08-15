@@ -1,5 +1,6 @@
-package org.beanone.xlogger.configure;
+package org.beanone.xlogger;
 
+import org.beanone.xlogger.ConfigHandler;
 import org.beanone.xlogger.LoggerLevel;
 import org.beanone.xlogger.MethodAccessLevel;
 import org.junit.Assert;

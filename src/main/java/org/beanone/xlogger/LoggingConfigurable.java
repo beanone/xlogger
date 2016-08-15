@@ -1,4 +1,4 @@
-package org.beanone.xlogger.configure;
+package org.beanone.xlogger;
 
 /**
  * Abstraction of the basic logic of logging configuration.

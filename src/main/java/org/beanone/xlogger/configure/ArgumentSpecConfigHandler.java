@@ -1,9 +1,9 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import org.apache.commons.lang.StringUtils;
 import org.beanone.xlogger.ArgumentSpecRegistry;
+import org.beanone.xlogger.ConfigHandler;
 import org.beanone.xlogger.ConfiguredArgumentSpec;
-import org.beanone.xlogger.configure.ConfigHandler;
 import org.springframework.stereotype.Component;
 
 @Component

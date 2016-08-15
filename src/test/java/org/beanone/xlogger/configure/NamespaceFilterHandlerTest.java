@@ -1,8 +1,9 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.beanone.xlogger.configure.NamespaceFilterHandler;
 import org.junit.Assert;
 import org.junit.Test;
 

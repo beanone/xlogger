@@ -1,9 +1,9 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.lang.reflect.Method;
 
+import org.beanone.xlogger.ConfigHandler;
 import org.beanone.xlogger.LoggerLevel;
-import org.beanone.xlogger.configure.ConfigHandler;
 
 /**
  * {@link Method} based {@link LoggerLevel} configuration for join points.

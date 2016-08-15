@@ -1,7 +1,4 @@
-package org.beanone.xlogger.configure;
-
-import org.beanone.xlogger.LoggerLevel;
-import org.beanone.xlogger.MethodAccessLevel;
+package org.beanone.xlogger;
 
 /**
  * Abstraction of configuration handling logic.

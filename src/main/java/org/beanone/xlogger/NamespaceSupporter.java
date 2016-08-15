@@ -1,4 +1,4 @@
-package org.beanone.xlogger.configure;
+package org.beanone.xlogger;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;

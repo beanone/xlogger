@@ -1,11 +1,11 @@
-package org.beanone.xlogger.configure.impl;
+package org.beanone.xlogger.configure;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.beanone.xlogger.AspectContext;
+import org.beanone.xlogger.ConfigHandler;
 import org.beanone.xlogger.LoggerLevel;
-import org.beanone.xlogger.configure.ConfigHandler;
 import org.springframework.stereotype.Component;
 
 /**

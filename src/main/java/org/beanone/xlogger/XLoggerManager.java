@@ -7,13 +7,17 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.aspectj.lang.JoinPoint;
-import org.beanone.xlogger.configure.ConfigHandler;
-import org.beanone.xlogger.configure.NamespaceSupporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+/**
+ * The facade class for XLogger.
+ *
+ * @author Hongyan Li
+ *
+ */
 @Component
 public class XLoggerManager {
 	@Autowired
