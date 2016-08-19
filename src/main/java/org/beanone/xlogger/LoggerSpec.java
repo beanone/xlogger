@@ -25,7 +25,7 @@ public @interface LoggerSpec {
 	LoggerLevel level() default LoggerLevel.TRACE;
 
 	/**
-	 * @return the partition to use for the method arguments.
+	 * @return the profile to use for the method arguments.
 	 */
-	String partition() default "";
+	String profile() default "";
 }

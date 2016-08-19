@@ -34,7 +34,7 @@ public class LoggerSupport {
 		}
 
 		@Override
-		public String partition() {
+		public String profile() {
 			return "";
 		}
 	};

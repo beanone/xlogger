@@ -21,7 +21,7 @@ public class ArgumentSpecRegistry {
 		}
 	};
 
-	private static final Map<String, ArgumentSpecRegistry> partitions = new HashMap<>();
+	private static final Map<String, ArgumentSpecRegistry> profiles = new HashMap<>();
 
 	private final Map<Class<?>, ArgumentSpec<?>> argumentSpecs = new HashMap<>();
 
@@ -37,26 +37,26 @@ public class ArgumentSpecRegistry {
 	}
 
 	/**
-	 * @param partitionName
-	 *            the name of a partition of {@link ArgumentSpecRegistry}. Value
+	 * @param profileName
+	 *            the name of a profile of {@link ArgumentSpecRegistry}. Value
 	 *            trimmed before use.
-	 * @return a {@link ArgumentSpecRegistry} for the passed in partition.
+	 * @return a {@link ArgumentSpecRegistry} for the passed in profile.
 	 */
-	public static ArgumentSpecRegistry current(String partitionName) {
-		LogExecutionContext.current().setPartition(partitionName);
-		return StringUtils.isBlank(partitionName) ? BASE
-		        : partitions.get(partitionName.trim());
+	public static ArgumentSpecRegistry current(String profileName) {
+		LogExecutionContext.current().setProfile(profileName);
+		return StringUtils.isBlank(profileName) ? BASE
+		        : profiles.get(profileName.trim());
 	}
 
 	/**
-	 * Initializes the passed in partition by name.
+	 * Initializes the passed in profile by name.
 	 *
-	 * @param partitionName
-	 *            the name of the partition to be initialized. Value trimmed
+	 * @param profileName
+	 *            the name of the profile to be initialized. Value trimmed
 	 *            before use.
 	 */
-	public static void initPartition(String partitionName) {
-		partitions.put(partitionName.trim(), new ArgumentSpecRegistry() {
+	public static void initProfile(String profileName) {
+		profiles.put(profileName.trim(), new ArgumentSpecRegistry() {
 			@Override
 			public <T> ArgumentSpec<T> getSpec(Class<T> clazz) {
 				final ArgumentSpec<T> returns = super.getSpec(clazz);

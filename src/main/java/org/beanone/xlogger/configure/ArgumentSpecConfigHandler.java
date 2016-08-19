@@ -13,10 +13,10 @@ public class ArgumentSpecConfigHandler
 	@Override
 	public void addConfigEntry(String withPrefix, String value) {
 		final String key = stripPrefix(withPrefix);
-		String partition = "";
+		String profile = "";
 		final int index = key.indexOf('.');
 		if (index > 0) {
-			partition = key.substring(0, index);
+			profile = key.substring(0, index);
 		}
 		final String className = key.substring(index + 1);
 
@@ -26,12 +26,12 @@ public class ArgumentSpecConfigHandler
 		}
 
 		try {
-			if (ArgumentSpecRegistry.current(partition) == null) {
-				ArgumentSpecRegistry.initPartition(partition);
+			if (ArgumentSpecRegistry.current(profile) == null) {
+				ArgumentSpecRegistry.initProfile(profile);
 			}
-			ArgumentSpecRegistry.current(partition).register(
+			ArgumentSpecRegistry.current(profile).register(
 			        Class.forName(className),
-			        new ConfiguredArgumentSpec(partition, value));
+			        new ConfiguredArgumentSpec(profile, value));
 		} catch (final ClassNotFoundException e) {
 			throw new IllegalArgumentException(e);
 		}

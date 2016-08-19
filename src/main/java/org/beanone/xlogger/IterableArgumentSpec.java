@@ -6,9 +6,9 @@ public class IterableArgumentSpec implements ArgumentSpec<Iterable> {
 	@Override
 	public String describe(Iterable arg) {
 		final StringBuilder sb = new StringBuilder();
-		final String partition = LogExecutionContext.current().getPartition();
+		final String profile = LogExecutionContext.current().getProfile();
 		final ArgumentSpecRegistry registry = ArgumentSpecRegistry
-		        .current(partition);
+		        .current(profile);
 		arg.forEach(t -> {
 			final ArgumentSpec<?> spec = registry.getSpec(t.getClass());
 			sb.append(spec.asString(t)).append(", ");

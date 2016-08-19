@@ -8,9 +8,9 @@ public class MapArgumentSpec implements ArgumentSpec<Map> {
 	@Override
 	public String describe(Map arg) {
 		final StringBuilder sb = new StringBuilder();
-		final String partition = LogExecutionContext.current().getPartition();
+		final String profile = LogExecutionContext.current().getProfile();
 		final ArgumentSpecRegistry registry = ArgumentSpecRegistry
-		        .current(partition);
+		        .current(profile);
 		arg.forEach((k, v) -> {
 			final ArgumentSpec<?> kSpec = registry.getSpec(k.getClass());
 			final ArgumentSpec<?> vSpec = registry.getSpec(v.getClass());

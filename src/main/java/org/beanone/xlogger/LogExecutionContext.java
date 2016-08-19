@@ -10,7 +10,7 @@ public class LogExecutionContext {
 	};
 
 	private Throwable handlingException;
-	private String partition;
+	private String profile;
 
 	private LogExecutionContext() {
 		// private for thread local singleton
@@ -33,11 +33,11 @@ public class LogExecutionContext {
 		return this.handlingException;
 	}
 
-	public String getPartition() {
-		return this.partition;
+	public String getProfile() {
+		return this.profile;
 	}
 
-	public void setPartition(String partition) {
-		this.partition = partition;
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 }

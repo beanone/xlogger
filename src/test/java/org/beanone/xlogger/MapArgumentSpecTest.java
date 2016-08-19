@@ -26,7 +26,7 @@ public class MapArgumentSpecTest {
 		        new MapArgumentSpec());
 
 		final String part = "test";
-		ArgumentSpecRegistry.initPartition(part);
+		ArgumentSpecRegistry.initProfile(part);
 		final ArgumentSpec<MockArg> spec = new ConfiguredArgumentSpec(part,
 		        "id, mapArg");
 		ArgumentSpecRegistry.current(part).register(MockArg.class, spec);

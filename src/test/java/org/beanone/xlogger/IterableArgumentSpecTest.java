@@ -23,7 +23,7 @@ public class IterableArgumentSpecTest {
 		        new IterableArgumentSpec());
 
 		final String part = "test";
-		ArgumentSpecRegistry.initPartition(part);
+		ArgumentSpecRegistry.initProfile(part);
 		@SuppressWarnings("unchecked")
 		final ArgumentSpec<MockArg> spec = new ConfiguredArgumentSpec(part,
 		        "id, listArg");

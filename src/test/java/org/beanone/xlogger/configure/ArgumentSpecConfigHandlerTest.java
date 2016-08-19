@@ -16,7 +16,7 @@ public class ArgumentSpecConfigHandlerTest {
 	}
 
 	@Test
-	public void testAddConfigEntryDefaultPartition() {
+	public void testAddConfigEntryDefaultProfile() {
 		class ArgClass {
 		}
 		ArgumentSpec<?> result = ArgumentSpecRegistry.current()
@@ -35,10 +35,10 @@ public class ArgumentSpecConfigHandlerTest {
 	}
 
 	@Test
-	public void testAddConfigEntryNamedPartition() {
+	public void testAddConfigEntryNamedProfile() {
 		class AnotherArg {
 		}
-		ArgumentSpecRegistry.initPartition("verbose");
+		ArgumentSpecRegistry.initProfile("verbose");
 		ArgumentSpec<?> result = ArgumentSpecRegistry.current("verbose")
 		        .getSpec(AnotherArg.class);
 		Assert.assertFalse(result instanceof ConfiguredArgumentSpec);

@@ -26,11 +26,11 @@ public class LogExecutionContextTest {
 	}
 
 	@Test
-	public void testGetSetPartition() {
-		final String partition = "test" + UUID.randomUUID().toString();
-		LogExecutionContext.current().setPartition(partition);
-		Assert.assertEquals(partition,
-		        LogExecutionContext.current().getPartition());
+	public void testGetSetProfile() {
+		final String profile = "test" + UUID.randomUUID().toString();
+		LogExecutionContext.current().setProfile(profile);
+		Assert.assertEquals(profile,
+		        LogExecutionContext.current().getProfile());
 	}
 
 }

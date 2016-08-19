@@ -19,19 +19,19 @@ import org.slf4j.LoggerFactory;
 public class ConfiguredArgumentSpec implements ArgumentSpec {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(ConfiguredArgumentSpec.class);
-	private final String partition;
+	private final String profile;
 	private final List<String> attributes = new ArrayList<>();
 
 	/**
 	 * Create an instance of this.
 	 *
-	 * @param partition
-	 *            the partition the ArgumentSpec lives in.
+	 * @param profile
+	 *            the profile the ArgumentSpec lives in.
 	 * @param configuration
 	 *            the configuration.
 	 */
-	public ConfiguredArgumentSpec(String partition, String configuration) {
-		this.partition = partition;
+	public ConfiguredArgumentSpec(String profile, String configuration) {
+		this.profile = profile;
 		final StringTokenizer st = new StringTokenizer(configuration, ",");
 		while (st.hasMoreTokens()) {
 			this.attributes.add(st.nextToken().trim());
@@ -42,7 +42,7 @@ public class ConfiguredArgumentSpec implements ArgumentSpec {
 	public String describe(Object arg) {
 		final StringBuilder sb = new StringBuilder();
 		final ArgumentSpecRegistry registry = ArgumentSpecRegistry
-		        .current(this.partition);
+		        .current(this.profile);
 		this.attributes.forEach(a -> {
 			try {
 				final Object value = PropertyUtils.getProperty(arg, a);

@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * register {@link ArgumentSpec} for the corresponding class type with an
  * {@link ArgumentSpecRegistry}. More than one {@link ArgumentSpec}s of a single
  * class type can be registered, each with a different
- * {@link ArgumentSpecRegistry} partition.
+ * {@link ArgumentSpecRegistry} profile.
  *
  * Log levels defaulting can be defined by binding to the logging advice(s) in
  * your concrete logging aspect (subclass of this class). Method level
@@ -98,7 +98,7 @@ public abstract class AbstractMethodLogger {
 
 			final LoggingContext context = new LoggingContext()
 			        .logger(getLogger(signature.getDeclaringType()))
-			        .registry(ArgumentSpecRegistry.current(spec.partition()));
+			        .registry(ArgumentSpecRegistry.current(spec.profile()));
 			final MethodSignature ms = (MethodSignature) signature;
 			final Object[] args = pjp.getArgs();
 			final LoggerLevel level = spec.level() == null ? defaultLevel
@@ -149,7 +149,7 @@ public abstract class AbstractMethodLogger {
 				final LoggingContext context = new LoggingContext()
 				        .logger(getLogger(signature.getDeclaringType()))
 				        .registry(
-				                ArgumentSpecRegistry.current(spec.partition()));
+				                ArgumentSpecRegistry.current(spec.profile()));
 				final MethodSignature ms = (MethodSignature) signature;
 				ExceptionSpec[] exceptionSpecs = spec.exceptionLevel();
 				exceptionSpecs = (exceptionSpecs == null

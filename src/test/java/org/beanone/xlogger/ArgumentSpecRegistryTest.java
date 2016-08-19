@@ -20,10 +20,10 @@ public class ArgumentSpecRegistryTest {
 
 	@Test
 	public void testCurrentString() {
-		final String partition = "part";
-		ArgumentSpecRegistry.initPartition(partition);
+		final String profile = "part";
+		ArgumentSpecRegistry.initProfile(profile);
 		final ArgumentSpecRegistry registry = ArgumentSpecRegistry
-		        .current(partition);
+		        .current(profile);
 		Assert.assertNotNull(registry);
 		Assert.assertNotNull(registry.getSpec(Integer.class));
 		registry.register(MockArg.class, arg -> arg.getId());
