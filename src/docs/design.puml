@@ -1,0 +1,57 @@
+@startuml
+	!pragma horizontalLineBetweenDifferentPackageAllowed
+
+	node POMs {
+		component rootPOM
+		component aspectPOM
+		aspectPOM .up.> rootPOM
+	}
+	
+	node logging_aspect_projects {
+		component xlogger
+		component aspect as "logging-aspect"
+		aspect .up.* xlogger
+	}
+	
+	xlogger .left.|> rootPOM
+	aspectPOM .right.* aspect
+	
+	component module1 <<Using Aspects>> #eeeeee {
+		rectangle init1 as "Logging Init API Call" #dddddd
+	}
+	
+	component module2 <<Using Aspects>> #eeeeee {
+		rectangle init2 as "Logging Init API Call" #dddddd
+	}
+	
+	module1 .up.|> aspectPOM
+	module2 .up.|> aspectPOM
+	
+	note bottom of init1 #cccccc
+		Registers packages and classes with
+		logging namespaces.
+	end note
+	
+	component dist <<Distribution>> #add8e6 {
+		rectangle config as "Logging Config File" #86c5da
+	}
+	
+	dist .up.* module1
+	dist .up.* module2
+	dist .up.* aspect
+	
+	note bottom of dist
+		Benefits:
+			* Fully decouples logging from the business logic and thus cleaner codebase.
+			* Frees developers from the logging chore and thus reduces cost.
+			* Enforces good practice and standardization of logging which leads to better
+			  logging quality and presents a more professional appearance to the users.
+			* Enforces consistency of logging messages and thus becomes easier for 
+			  the readers to understand and thus saves cost.
+			* Makes it simple to add context info into the logging messages for 
+			  tracking and debugging.
+			* Enables customization of the logging behavior for different purposes 
+			  and different customer.
+			* Unifies logging, auditing and method level performance profiling into one.
+	end note
+@enduml
