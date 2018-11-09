@@ -1,8 +1,10 @@
 # XLogger
 
-A non-intrusive logging framework implemented using AspectJ. 
+XLogger is based on the idea that any system is consist of a number of nested and/or inter-mingled life cycles. Logging the life cycle events of these life cycles is really most what you need to do in terms of application logging and audit logging. For example, in a typical web application, you would have application life cycle, session life cycle, request life cycle, and data life cycle.
 
-The goal of this API is to remove the need to add any logging statement into your application with minimum configuration.
+Combining this with an Aspect based implementation, XLogger is created.
+
+XLogger makes it possible to treat logging as an application policy. The outcome is a system that has consistent but configurable and predictable logging behavior. This has numerous benefits. First, it relieves the developers from the chore of writing logging statements. Second, since it records the life cycle events, debugging and troubleshooting is a lot simpler. Third, logging behavior can be controled in a more preditable way.
 
 ## Usage
 
